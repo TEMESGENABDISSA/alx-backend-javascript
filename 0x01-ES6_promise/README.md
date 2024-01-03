@@ -24,4 +24,4 @@ All test files for each task are in tests directory
 
 ## Author
 
-[Abeeb Raheem](https://github.com/belovetech/alx-backend-javascript/tree/main/0x01-ES6_promise)
+## Temesgen Abdissa
