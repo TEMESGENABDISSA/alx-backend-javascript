@@ -1,44 +1,23 @@
-const chai = require('chai');
 const sinon = require('sinon');
 const Utils = require('./utils');
+const { expect } = require('chai');
 const sendPaymentRequestToApi = require('./4-payment');
 
-const expect = chai.expect;
+describe('sendPaymentRequestToApi', () => {
+  it('sendPaymentRequestToApi calls console.log with the exact output', () => {
+    const spy = sinon.spy(console, 'log');
+    const stub = sinon.stub(Utils, 'calculateNumber');
 
-describe('4-payment.test sendPaymentRequestToApi', () => {
-  let apiStub = null;
+    stub.returns(10);
+    sendPaymentRequestToApi(100, 20);
 
-  beforeEach(() => {
-    apiStub = sinon.stub(Utils, 'calculateNumber').returns(10);
-  });
+    expect(stub.calledWith('SUM', 100, 20)).to.be.true;
+    expect(stub.calledOnce).to.be.true;
 
-  it('should call calculateNumber with the correct parameters', () => {
-    const totalAmount = 100;
-    const totalShipping = 10;
+    expect(spy.calledWith('The total is: 10')).to.be.true;
+    expect(spy.calledOnce).to.be.true;
 
-    sendPaymentRequestToApi(totalAmount, totalShipping);
-    expect(apiStub.calledWith('SUM', totalAmount, totalShipping)).to.be.true;
-  });
-
-  it('should call calculateNumber once', () => {
-    const totalAmount = 100;
-    const totalShipping = 10;
-
-    sendPaymentRequestToApi(totalAmount, totalShipping);
-    expect(apiStub.calledOnce).to.be.true;
-  });
-
-  it('should call console.log with correct parameters', () => {
-    const totalAmount = 100;
-    const totalShipping = 10;
-    sinon.spy(console, 'log');
-
-    sendPaymentRequestToApi(totalAmount, totalShipping);
-    expect(console.log.calledWith('The total is: 10')).to.be.true;
-    console.log.restore();
-  });
-
-  afterEach(() => {
-    apiStub.restore();
+    stub.restore();
+    spy.restore();
   });
 });

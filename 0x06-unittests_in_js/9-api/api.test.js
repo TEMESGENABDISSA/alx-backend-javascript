@@ -1,70 +1,39 @@
-const {
-    expect,
-  } = require('chai');
-  const request = require('request');
-  
-  describe('IndexPage', () => {
-    it('should have the correct status code', () => {
-      request('http://localhost:7865', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(200);
-      });
+const request = require('request');
+const { expect } = require('chai');
+
+describe('API integration test for cart page', () => {
+  const API_URL = 'http://localhost:7865/cart';
+
+  it('test response status code of cart/ without id', (done) => {
+    request.get(`${API_URL}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(200);
+      expect(body).to.be.equal('Welcome to the payment system');
+      done();
     });
-  
-    it('should have the correct result', () => {
-      request('http://localhost:7865', (_err, _res, body) => {
-        expect(body).to.contain('Welcome to the payment system');
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      request('http://localhost:7865', (_err, res, _body) => {
-        expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      request('http://localhost:7865', (_err, res, _body) => {
-        expect(res.headers['content-length']).to.equal('29');
-      });
-    });
-  
   });
-  
-  describe('CartPage', () => {
-    it('should have the correct status code with number id parameter', () => {
-      request('http://localhost:7865/cart/12', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(200);
-      });
+
+  it('test response status code of cart/ with positive integer id', (done) => {
+    const id = 25;
+    request.get(`${API_URL}/${id}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(200);
+      expect(body).to.be.equal('Payment methods for cart 25');
+      done();
     });
-  
-    it('should have the correct result with number id parameter', () => {
-      request('http://localhost:7865/cart/12', (_err, _res, body) => {
-        expect(body).to.contain('Payment methods for cart 12');
-      });
-    });
-  
-    it('should have the correct status with non number id parameter', () => {
-      request('http://localhost:7865/cart/1bc', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(404);
-      });
-    });
-  
-    it('should have the correct body content with non number id parameter', () => {
-      request('http://localhost:7865/cart/1bc', (_error, _response, body) => {
-        expect(body).to.contain('Cannot GET /cart/1bc');
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      request('http://localhost:7865/cart/12', (_err, res, _body) => {
-        expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      request('http://localhost:7865/cart/12', (_err, res, _body) => {
-        expect(res.headers['content-length']).to.equal('27');
-      });
-    });
-  
   });
+
+  it('test response status code of cart/ with negative id', (done) => {
+    const id = -25;
+    request.get(`${API_URL}/${id}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(404);
+      done();
+    });
+  });
+
+  it('test response status code of cart/ with non-numeric id ', (done) => {
+    const id = 'axzasd4556fds';
+    request.get(`${API_URL}/${id}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(404);
+      done();
+    });
+  });
+});

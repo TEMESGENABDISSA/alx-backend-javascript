@@ -1,34 +1,27 @@
-const chai = require('chai');
 const sinon = require('sinon');
-const Utils = require('./utils');
+const { expect } = require('chai');
 const sendPaymentRequestToApi = require('./5-payment');
 
-const expect = chai.expect;
-
 describe('sendPaymentRequestToApi', () => {
-  beforeEach(() => {
-    sinon.spy(console, 'log');
-  });
+  let spy;
 
-  it('should call console.log with the correct parameters and call it once', () => {
-    const totalAmount = 100;
-    const totalShipping = 20;
-
-    sendPaymentRequestToApi(totalAmount, totalShipping);
-    expect(console.log.calledWith('The total is: 120')).to.be.true;
-    expect(console.log.calledOnce).to.be.true;
-  });
-
-  it('should call console.log with the correct parameters and call it once', () => {
-    const totalAmount = 10;
-    const totalShipping = 10;
-
-    sendPaymentRequestToApi(totalAmount, totalShipping);
-    expect(console.log.calledWith('The total is: 20')).to.be.true;
-    expect(console.log.calledOnce).to.be.true;
+  beforeEach('Create a spy', () => {
+    spy = sinon.spy(console, 'log');
   });
 
   afterEach(() => {
-    sinon.restore();
+    spy.restore();
+  });
+
+  it('Verify that the console is logging the string The total is: 120 and called once', () => {
+    sendPaymentRequestToApi(100, 20);
+    expect(spy.calledWith('The total is: 120')).to.be.true;
+    expect(spy.calledOnce).to.be.true;
+  });
+
+  it('Verify that the console is logging the string The total is: 20 and called once', () => {
+    sendPaymentRequestToApi(10, 10);
+    expect(spy.calledWith('The total is: 20')).to.be.true;
+    expect(spy.calledOnce).to.be.true;
   });
 });

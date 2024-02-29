@@ -1,24 +1,16 @@
-/**
- * Contains utility functions for the application.
- */
- const Utils = {
-    calculateNumber: (type, a, b) => {
-      a = Math.round(a);
-      b = Math.round(b);
-      switch (type) {
-        case 'SUM':
-          return (a + b);
-        case 'SUBTRACT':
-          return (a - b);
-        case 'DIVIDE':
-          if (b === 0) {
-            return 'Error';
-          }
-          return (a / b);
-        default:
-          return 'Error';
-      }
+const Utils = {
+  calculateNumber (type, a, b) {
+    if (type === 'SUM') {
+      return Math.round(a) + Math.round(b);
     }
-  };
-  
-  module.exports = Utils;
+    if (type === 'SUBTRACT') {
+      return Math.round(a) - Math.round(b);
+    }
+    if (type === 'DIVIDE') {
+      if (Math.round(b) === 0) return 'Error';
+      return Math.round(a) / Math.round(b);
+    }
+  }
+};
+
+module.exports = Utils;

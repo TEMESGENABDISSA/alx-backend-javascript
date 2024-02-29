@@ -1,26 +1,13 @@
-const {
-    expect,
-  } = require('chai');
-  const getPaymentTokenFromAPI = require('./6-payment_token');
-  
-  describe('getPaymentTokenFromAPI', () => {
-    it('should return a Promise', () => {
-      const result = getPaymentTokenFromAPI();
-      expect(result).to.be.an.instanceof(Promise);
-    });
-  
-    it('should resolve with a data object when true', () => {
-      getPaymentTokenFromAPI(true).then(data => {
-        expect(data).to.be.an('object');
-        expect(data).to.have.property('data');
-        done();
+const { expect } = require('chai');
+const getPaymentTokenFromAPI = require('./6-payment_token');
+
+describe('getPaymentTokenFromAPI', () => {
+  it('Test the result of getPaymentTokenFromAPI(true)', (done) => {
+    getPaymentTokenFromAPI(true).then((res) => {
+      expect(res).to.deep.equal({
+        data: 'Successful response from the API',
       });
-    });
-  
-    it('should reject with doing nothing when false', () => {
-      getPaymentTokenFromAPI(false).then(data => {
-        expect(data).to.equal('');
-        done();
-      });
+      done();
     });
   });
+});

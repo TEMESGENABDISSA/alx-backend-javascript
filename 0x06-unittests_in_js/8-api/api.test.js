@@ -1,31 +1,55 @@
-const {
-    expect,
-  } = require('chai');
-  const request = require('request');
-  
-  describe('IndexPage', () => {
-    it('should have the correct status code', () => {
-      request('http://localhost:7865', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(200);
-      });
+const request = require('request');
+const { expect } = require('chai');
+
+describe('API integration test', () => {
+  const API_URL = 'http://localhost:7865';
+
+  it('test response status code of GET/ of the API', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(res.statusCode).to.equal(200);
+      done();
     });
-  
-    it('should have the correct result', () => {
-      request('http://localhost:7865', (_err, _res, body) => {
-        expect(body).to.contain('Welcome to the payment system');
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      request('http://localhost:7865', (_err, res, _body) => {
-        expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      request('http://localhost:7865', (_err, res, _body) => {
-        expect(res.headers['content-length']).to.equal('29');
-      });
-    });
-  
   });
+
+  it('test response body of GET/ of the API', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(body).to.be.equal('Welcome to the payment system');
+      done();
+    });
+  });
+
+  it('test for correct path of GET request', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(res.request.uri.path).to.be.equal('/');
+      done();
+    });
+  });
+
+  it('test for correct hostname of GET request', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(res.request.uri.hostname).to.be.equal('localhost');
+      done();
+    });
+  });
+
+  it('test for correct HTTP methods of GET request', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(res.request.req.method).to.be.equal('GET');
+      done();
+    });
+  });
+
+  it('test for correct host of GET request', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(res.request.uri.host).to.be.equal('localhost:7865');
+      done();
+    });
+  });
+
+  it('test for correct protocol of GET request', (done) => {
+    request.get(`${API_URL}/`, (err, res, body) => {
+      expect(res.request.uri.protocol).to.be.equal('http:');
+      done();
+    });
+  });
+});

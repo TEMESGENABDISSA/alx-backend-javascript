@@ -1,29 +1,48 @@
-const calculateNumber = require('./0-calcul');
 const assert = require('assert');
+const calculateNumber = require('./0-calcul');
 
 describe('calculateNumber', function () {
-
-  it('should return integer as sum with float and float', () => {
-    assert.deepStrictEqual(calculateNumber(1.7, 2.3), 4);
+  it('Should return 4', function () {
+    assert.strictEqual(calculateNumber(1, 3), 4);
   });
 
-  it('should return integer as sum with integer and float', () => {
-    assert.deepStrictEqual(calculateNumber(1, 2.3), 3);
+  it('Should return -5', function () {
+    assert.strictEqual(calculateNumber(-3, -2), -5);
   });
 
-  it('should return integer as sum with integer and integer', () => {
-    assert.deepStrictEqual(calculateNumber(1, 2), 3);
+  it('Should return 5', function () {
+    assert.strictEqual(calculateNumber(1.4, 3.7), 5);
   });
 
-  it('should return correct sum with a float rounded up and other float rounded down', () => {
-    assert.deepStrictEqual(calculateNumber(0.2, 2.8), 3);
+  it('Should return -5', function () {
+    assert.strictEqual(calculateNumber(-1.4, -3.7), -5);
   });
 
-  it('should return correct sum with numbers to be rounded down', () => {
-    assert.deepStrictEqual(calculateNumber(0.1, 0.2), 0);
+  it('Should return 5', function () {
+    assert.strictEqual(calculateNumber(1.45, 3.79), 5);
   });
 
-  it('should return correct sum with numbers to be rounded up', () => {
-    assert.deepStrictEqual(calculateNumber(0.8, 1.7), 3);
+  it('Should return NaN', function () {
+    assert.strictEqual(calculateNumber('a', 'b'), NaN);
+  });
+
+  it('Should return NaN', function () {
+    assert.strictEqual(calculateNumber('goat', 'dog'), NaN);
+  });
+
+  it('Should return NaN', function () {
+    assert.strictEqual(calculateNumber([1, 2, 3], 5), NaN);
+  });
+
+  it('Should return NaN', function () {
+    assert.strictEqual(calculateNumber({ a: 24 }, 5), NaN);
+  });
+
+  it('Should return NaN', function () {
+    assert.strictEqual(calculateNumber(), NaN);
+  });
+
+  it('Should return NaN', function () {
+    assert.strictEqual(calculateNumber(2), NaN);
   });
 });

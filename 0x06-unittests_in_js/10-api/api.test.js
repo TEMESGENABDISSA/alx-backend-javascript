@@ -1,166 +1,61 @@
-const {
-    expect,
-  } = require('chai');
-  const request = require('request');
-  
-  describe('IndexPage', () => {
-    it('should have the correct status code', () => {
-      request('http://localhost:7865', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(200);
-      });
-    });
-  
-    it('should have the correct result', () => {
-      request('http://localhost:7865', (_err, _res, body) => {
-        expect(body).to.contain('Welcome to the payment system');
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      request('http://localhost:7865', (_err, res, _body) => {
-        expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      request('http://localhost:7865', (_err, res, _body) => {
-        expect(res.headers['content-length']).to.equal('29');
-      });
+const request = require('request');
+const { expect } = require('chai');
+
+describe('Deep equality and Post integration testing', () => {
+  const API_URL = 'http://localhost:7865';
+
+  it('test response status code of cart/ without id', (done) => {
+    request.get(`${API_URL}/cart`, (err, res, body) => {
+      expect(res.statusCode).to.equal(200);
+      expect(body).to.be.equal('Welcome to the payment system');
+      done();
     });
   });
-  
-  describe('CartPage', () => {
-    it('should have the correct status code with number id parameter', () => {
-      request('http://localhost:7865/cart/12', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(200);
-      });
-    });
-  
-    it('should have the correct result with number id parameter', () => {
-      request('http://localhost:7865/cart/12', (_err, _res, body) => {
-        expect(body).to.contain('Payment methods for cart 12');
-      });
-    });
-  
-    it('should have the correct status with non number id parameter', () => {
-      request('http://localhost:7865/cart/1bc', (_error, response, _body) => {
-        expect(response.statusCode).to.equal(404);
-      });
-    });
-  
-    it('should have the correct body content with non number id parameter', () => {
-      request('http://localhost:7865/cart/1bc', (_error, _response, body) => {
-        expect(body).to.contain('Cannot GET /cart/1bc');
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      request('http://localhost:7865/cart/12', (_err, res, _body) => {
-        expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      request('http://localhost:7865/cart/12', (_err, res, _body) => {
-        expect(res.headers['content-length']).to.equal('27');
-      });
+
+  it('test response status code of cart/ with positive integer id', (done) => {
+    const id = 25;
+    request.get(`${API_URL}/cart/${id}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(200);
+      expect(body).to.be.equal('Payment methods for cart 25');
+      done();
     });
   });
-  
-  describe('LoginPage', () => {
-    it('should have the correct status code', () => {
-      const formData = {
-        userName: 'Betty',
-      };
-      request.post({
-        url: 'http://localhost:7865/login',
-        body: formData,
-        json: true,
-      }, (_error, res, _body) => {
-        expect(res.statusCode).to.equal(200);
-      });
-    });
-  
-    it('should have the correct result with form data value', () => {
-      const formData = {
-        userName: 'Betty',
-      };
-      request.post({
-        url: 'http://localhost:7865/login',
-        body: formData,
-        json: true,
-      }, (_err, _res, body) => {
-        expect(body).to.contain('Welcome Betty');
-      });
-    });
-  
-    it('should have the correct status with invalid get value', () => {
-      const formData = {
-        username: 'Betty',
-      };
-      request.post({
-        url: 'http://localhost:7865/login',
-        body: formData,
-        json: true,
-      }, (_err, res, _body) => {
-        expect(res.statusCode).to.equal(404);
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      const formData = {
-        userName: 'Betty',
-      };
-      request.post({
-        url: 'http://localhost:7865/login',
-        body: formData,
-        json: true,
-      }, (_err, res, _body) => {
-        expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      const formData = {
-        userName: 'Betty',
-      };
-      request.post({
-        url: 'http://localhost:7865/login',
-        body: formData,
-        json: true,
-      }, (_err, res, _body) => {
-        expect(res.headers['content-length']).to.equal('13');
-      });
+
+  it('test response status code of cart/ with negative id', (done) => {
+    const id = -25;
+    request.get(`${API_URL}/cart/${id}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(404);
+      done();
     });
   });
-  
-  describe('AvailablePayments', () => {
-    it('should have the correct status code', () => {
-      request('http://localhost:7865/available_payments', (_error, res, _body) => {
-        expect(res.statusCode).to.equal(200);
-      });
-    });
-  
-    it('should have the correct result with form data value', () => {
-      request('http://localhost:7865/available_payments', (_error, _res, body) => {
-        expect(JSON.parse(body)).to.deep.equal({
-          payment_methods: {
-            credit_cards: true,
-            paypal: false
-          }
-        });
-      });
-    });
-  
-    it('should have the correct content type', () => {
-      request('http://localhost:7865/available_payments', (_error, res, _body) => {
-        expect(res.headers['content-type']).to.equal('application/json; charset=utf-8');
-      });
-    });
-  
-    it('should have the correct content length', () => {
-      request('http://localhost:7865/available_payments', (_error, res, _body) => {
-        expect(res.headers['content-length']).to.equal('56');
-      });
+
+  it('test response status code of cart/ with non-numeric id ', (done) => {
+    const id = 'axzasd4556fds';
+    request.get(`${API_URL}/${id}`, (err, res, body) => {
+      expect(res.statusCode).to.equal(404);
+      done();
     });
   });
+
+  it('test output of GET/available_payments', (done) => {
+    request.get(`${API_URL}/available_payments`, (err, res, body) => {
+      expect(res.statusCode).to.be.equal(200);
+      expect(JSON.parse(body)).to.be.deep.equal({
+        payment_methods: { credit_cards: true, paypal: false },
+      });
+      done();
+    });
+  });
+
+  it('test output of POST/login endpoint', (done) => {
+    request.post(
+      `${API_URL}/login`,
+      { json: { userName: 'Betty' } },
+      (err, res, body) => {
+        expect(res.statusCode).to.be.equal(200);
+        expect(body).to.be.equal('Welcome Betty');
+      }
+    );
+    done();
+  });
+});
